@@ -1,18 +1,18 @@
-
 const ask = require("readline-sync")
-let doadores = [
-    {nome: 'Natan', idade: 17, peso: '60kg', sangue: 'A+',  ultimaDoacao: 'Nunca doei'}
-]
+let doadores = []  //Aqui fica armazenado os doadores
+
 let sairApp = true
 
 //1. Cadastrar Doador
 function cadastrarDoador(){
     let pararCadastro = true
     while(pararCadastro){
-        console.clear()
+        console.clear() //Para limpar o terminal    
+
         //Fazer as perguntas e armazenar resposta como var, para ser usado na criaçao do objeto
         console.log('\n----------------Sistema de Cadastro de Doador----------------')
         let name = ask.question('Qual o nome do doador? \nR:')
+        if(name === 'break'){break}
         let idade = Number(ask.question('\nQuantos anos o doador tem? \nR:'))
         let kg = ask.question('\nQuantos kg o doador pesa? \nR:') + 'kg'
         let tipoSangue = ask.question('\nQual o tipo sanguineo: A, B, AB ou O? (Pode digitar A+, etc...)\nCaso nao saiba, digite: 1 \nR:').toUpperCase()
@@ -36,7 +36,7 @@ function cadastrarDoador(){
         console.log(`\n-------------------------------------\nParabens! O doador ${name} foi cadastrado.\n-------------------------------------\n`)
         
         //Para parar o loop
-        if(ask.question('Deseja cadastrar um outro doador? y/n \nR:').toLowerCase() === 'n'){console.log('------------------------------------------------'); pararCadastro = false}}
+        if(ask.question('Deseja cadastrar um outro doador? y/n \nR:').toLowerCase() !== 'y'){console.log('------------------------------------------------'); pararCadastro = false}}
 
 }
 
@@ -46,24 +46,57 @@ function mostrarDoadores(doadores){
     console.log('-----------------------------------------------')
     console.log('LISTA DE DOADORES')
     console.log('-----------------------------------------------')
-    console.log('NOME'.padEnd(50) + '   IDADE'.padEnd(10) + '    PESO'.padEnd(11) + '     TIPO DE SANGUE'.padEnd(16) + '      DATA DA ÚLTIMA DOAÇÃO')
+    //Cabeçalho da tabela, O .padENd() serve para dizer quantos caracteres minimos tem que ter a string
+    console.log('NOME'.padEnd(50) + '   IDADE'.padEnd(10) + '    PESO'.padEnd(11) + '     TIPO DE SANGUE'.padEnd(16) + '      DATA DA ÚLTIMA DOAÇÃO'
 
     for (let i = 0; i < doadores.length; i++){
-        let doador = doadores[i]
-        
+        let doador = doadores[i] //AQUI EU DECLARO QUE O DOADOR É IGUAL AO OBJETO DO INDICE[I], ENTAO ESSA VAR DOADOR VIRA UM OBJETO 
+        //Para aparecer os dados do doador
         console.log(`${doador.nome.padEnd(50)}| ${doador.idade.toString().padEnd(10)}| ${doador.peso.padEnd(10)}|  ${doador.sangue.padEnd(15)}|    ${doador.ultimaDoacao}`)
      }
 
     console.log('-----------------------------------------------')
-    if (ask.question('Para voltar digite: 9.\nR:') === '9'){menuApp()    ;   console.clear()}
+    ask.question('Para voltar aperte Enter.')
+    console.clear()
 }
+
+//3. Buscar doador por tipo sanguíneo
+function buscarPorTipoSanguineo(doadores) {
+    console.clear();
+    console.log('-----------------------------------------------');
+    console.log('BUSCAR DOADOR POR TIPO SANGUÍNEO');
+    console.log('-----------------------------------------------');
+
+    let buscarOTipo = ask.question('Digite o tipo sanguíneo que deseja buscar: \nCaso queria procurar por aqueles que nao possui identificado, basta digitar 1.\nR:').toUpperCase();
+    if(buscarOTipo === '1'){buscarOTipo = 'Nao sei'}
+
+    const doadoresEncontrados = doadores.filter(doadores => doadores.sangue === buscarOTipo); //esse doador 
+
+
+    if (doadoresEncontrados.length > 0) {
+        console.log('\n-----------------------------------------------');
+        console.log('DOADORES COM O SANGUE', buscarOTipo);
+        console.log('-----------------------------------------------');
+        console.log('NOME'.padEnd(50) + '   IDADE'.padEnd(10) + '    PESO'.padEnd(11) + '     TIPO DE SANGUE'.padEnd(16) + '      DATA DA ÚLTIMA DOAÇÃO')
+
+        for (let i = 0; i < doadoresEncontrados.length; i++) {
+            let doador = doadoresEncontrados[i];
+            console.log(`${doador.nome.padEnd(50)}| ${doador.idade.toString().padEnd(10)}| ${doador.peso.padEnd(10)}|  ${doador.sangue.padEnd(15)}|    ${doador.ultimaDoacao}`)
+        }
+    } else {console.log('\nNenhum doador encontrado')}
+
+    console.log('-----------------------------------------------');
+    ask.question('\nPressione Enter para voltar ao menu principal...');
+    console.clear();
+}
+
 
 //MENU APP
 function menuApp(){
     while(sairApp){
         console.clear()
         console.log('===== SISTEMA DE CADASTRO DE DOADORES DE SANGUE =====\n1. Cadastrar doador\n2. Listar doadores\n3. Buscar doador por tipo sanguíneo\n4. Buscar doador por data da última doação\n5. Sair')
-
+        console.log('\t*Caso queira cancelar o cadastro digite: break na pergunta do nome!')
         let escolhaUser = Number(ask.question('Escolha uma opcao:\nR:'))
 
         switch (escolhaUser){
@@ -74,17 +107,22 @@ function menuApp(){
             case 2:
                 mostrarDoadores(doadores)
                 console.clear()
-                break    
+                break
+            
+            case 3:
+                buscarPorTipoSanguineo(doadores)
+                break
 
             case 5:
                 console.clear()
                 sairApp = false
-
-            default:
-                console.log('Por favor, selecione uma opção')
-                break
+                
+                default:
+                    console.log('Por favor, selecione uma opção')
+                    break
         }
     }
 }
-
+        
 menuApp()
+        
