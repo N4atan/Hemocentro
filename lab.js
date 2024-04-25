@@ -13,6 +13,7 @@ function cadastrarDoador(){
         console.log('\n----------------Sistema de Cadastro de Doador----------------')
         let name = ask.question('Qual o nome do doador? \nR:')
         if(name === 'break'){break}
+
         let idade = Number(ask.question('\nQuantos anos o doador tem? \nR:'))
         let kg = ask.question('\nQuantos kg o doador pesa? \nR:') + 'kg'
         let tipoSangue = ask.question('\nQual o tipo sanguineo: A, B, AB ou O? (Pode digitar A+, etc...)\nCaso nao saiba, digite: 1 \nR:').toUpperCase()
@@ -46,8 +47,9 @@ function mostrarDoadores(doadores){
     console.log('-----------------------------------------------')
     console.log('LISTA DE DOADORES')
     console.log('-----------------------------------------------')
+    
     //Cabeçalho da tabela, O .padENd() serve para dizer quantos caracteres minimos tem que ter a string
-    console.log('NOME'.padEnd(50) + '   IDADE'.padEnd(10) + '    PESO'.padEnd(11) + '     TIPO DE SANGUE'.padEnd(16) + '      DATA DA ÚLTIMA DOAÇÃO'
+    console.log('NOME'.padEnd(50) + '   IDADE'.padEnd(10) + '    PESO'.padEnd(11) + '     TIPO DE SANGUE'.padEnd(16) + '      DATA DA ÚLTIMA DOAÇÃO')
 
     for (let i = 0; i < doadores.length; i++){
         let doador = doadores[i] //AQUI EU DECLARO QUE O DOADOR É IGUAL AO OBJETO DO INDICE[I], ENTAO ESSA VAR DOADOR VIRA UM OBJETO 
@@ -63,31 +65,65 @@ function mostrarDoadores(doadores){
 //3. Buscar doador por tipo sanguíneo
 function buscarPorTipoSanguineo(doadores) {
     console.clear();
-    console.log('-----------------------------------------------');
-    console.log('BUSCAR DOADOR POR TIPO SANGUÍNEO');
-    console.log('-----------------------------------------------');
+    console.log('-----------------------------------------------')
+    console.log('BUSCAR DOADOR POR TIPO SANGUINEO');
+    console.log('-----------------------------------------------')
 
-    let buscarOTipo = ask.question('Digite o tipo sanguíneo que deseja buscar: \nCaso queria procurar por aqueles que nao possui identificado, basta digitar 1.\nR:').toUpperCase();
+    let buscarOTipo = ask.question('Digite o tipo sanguineo que deseja buscar: \nCaso queria procurar por aqueles que nao possui identificado, basta digitar 1.\nR:').toUpperCase();
     if(buscarOTipo === '1'){buscarOTipo = 'Nao sei'}
 
-    const doadoresEncontrados = doadores.filter(doadores => doadores.sangue === buscarOTipo); //esse doador 
+    const doadoresEncontrados = doadores.filter(doadores => doadores.sangue === buscarOTipo)
 
+    console.clear()
 
     if (doadoresEncontrados.length > 0) {
-        console.log('\n-----------------------------------------------');
+        console.log('\n-----------------------------------------------')
         console.log('DOADORES COM O SANGUE', buscarOTipo);
-        console.log('-----------------------------------------------');
+        console.log('-----------------------------------------------')
         console.log('NOME'.padEnd(50) + '   IDADE'.padEnd(10) + '    PESO'.padEnd(11) + '     TIPO DE SANGUE'.padEnd(16) + '      DATA DA ÚLTIMA DOAÇÃO')
 
         for (let i = 0; i < doadoresEncontrados.length; i++) {
-            let doador = doadoresEncontrados[i];
+            let doador = doadoresEncontrados[i]
             console.log(`${doador.nome.padEnd(50)}| ${doador.idade.toString().padEnd(10)}| ${doador.peso.padEnd(10)}|  ${doador.sangue.padEnd(15)}|    ${doador.ultimaDoacao}`)
         }
     } else {console.log('\nNenhum doador encontrado')}
 
+    console.log('-----------------------------------------------')
+    ask.question('\nPressione Enter para voltar ao menu principal...')
+    console.clear()
+}
+
+//4.
+function filterByDate(doadores) {
+    console.clear()
+    console.log('-----------------------------------------------')
+    console.log('BUSCAR DOADOR POR DATA')
+    console.log('-----------------------------------------------')
+    let buscarAData = ask.question('Por qual data você quer buscar? dd/mm/aa. \nCaso queira pesquisar por aqueles que nunca doaram, digite 0. \nPelos que nao se lembram, digite 1 \nR:')
+
+    if(buscarAData === '0'){buscarAData = 'Nunca doei'} else if(buscarAData === '1'){buscarAData= 'Nao me lembro'} else{buscarAData = Number(buscarAData.split('/').reverse().join(''))}
+    
+    console.clear()
+
+    console.log('\n-----------------------------------------------')
+    console.log('DOADORES ANTES DA DATA SOLICITADA');
     console.log('-----------------------------------------------');
-    ask.question('\nPressione Enter para voltar ao menu principal...');
-    console.clear();
+    console.log('NOME'.padEnd(50) + '   IDADE'.padEnd(10) + '    PESO'.padEnd(11) + '     TIPO DE SANGUE'.padEnd(16) + '      DATA DA ÚLTIMA DOAÇÃO')
+
+    for (let i = 0; i < doadores.length; i++) {
+        let doador = doadores[i];
+
+        if(buscarAData === Number){
+        let dataDoador = Number(doador.ultimaDoacao.split('/').reverse().join(''));
+        } else {dataDoador = doador.ultimaDoacao.split('/').reverse().join('') }
+
+        if (buscarAData >= dataDoador) {
+        console.log(`${doador.nome.padEnd(50)}| ${doador.idade.toString().padEnd(10)}| ${doador.peso.padEnd(10)}|  ${doador.sangue.padEnd(15)}|    ${doador.ultimaDoacao}`);
+        } else {console.log('NENHUM DOADOR ENCONTRADO NO PERIODO')}
+    } 
+
+    console.log('-----------------------------------------------');
+    ask.question('\nAperte Enter para voltar... ');
 }
 
 
@@ -113,16 +149,21 @@ function menuApp(){
                 buscarPorTipoSanguineo(doadores)
                 break
 
+            case 4:
+                filterByDate(doadores)
+                break
+
             case 5:
                 console.clear()
                 sairApp = false
                 
-                default:
-                    console.log('Por favor, selecione uma opção')
-                    break
+            default:
+                console.log('Por favor, selecione uma opção')
+                break
         }
     }
 }
         
 menuApp()
         
+
