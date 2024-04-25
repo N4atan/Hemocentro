@@ -101,26 +101,36 @@ function filterByDate(doadores) {
     console.log('-----------------------------------------------')
     let buscarAData = ask.question('Por qual data você quer buscar? dd/mm/aa. \nCaso queira pesquisar por aqueles que nunca doaram, digite 0. \nPelos que nao se lembram, digite 1 \nR:')
 
-    if(buscarAData === '0'){buscarAData = 'Nunca doei'} else if(buscarAData === '1'){buscarAData= 'Nao me lembro'} else{buscarAData = Number(buscarAData.split('/').reverse().join(''))}
+    let dataFiltro
+    if (buscarAData === '0') {
+        dataFiltro = 'Nunca doei'
+    } else if (buscarAData === '1') {
+        dataFiltro = 'Nao me lembro'
+    } else {
+        dataFiltro = Number(buscarAData.split('/').reverse().join(''))
+    }
     
-    console.clear()
-
     console.log('\n-----------------------------------------------')
     console.log('DOADORES ANTES DA DATA SOLICITADA');
     console.log('-----------------------------------------------');
     console.log('NOME'.padEnd(50) + '   IDADE'.padEnd(10) + '    PESO'.padEnd(11) + '     TIPO DE SANGUE'.padEnd(16) + '      DATA DA ÚLTIMA DOAÇÃO')
 
     for (let i = 0; i < doadores.length; i++) {
-        let doador = doadores[i];
+        let doador = doadores[i]
 
-        if(buscarAData === Number){
-        let dataDoador = Number(doador.ultimaDoacao.split('/').reverse().join(''));
-        } else {dataDoador = doador.ultimaDoacao.split('/').reverse().join('') }
+        let dataDoador
+        if (doador.ultimaDoacao === 'Nunca doei') {
+            dataDoador = 'Nunca doei'
+        } else if (doador.ultimaDoacao === 'Nao me lembro') {
+            dataDoador = 'Nao me lembro'
+        } else {
+            dataDoador = Number(doador.ultimaDoacao.split('/').reverse().join(''));
+        }
 
-        if (buscarAData >= dataDoador) {
-        console.log(`${doador.nome.padEnd(50)}| ${doador.idade.toString().padEnd(10)}| ${doador.peso.padEnd(10)}|  ${doador.sangue.padEnd(15)}|    ${doador.ultimaDoacao}`);
-        } else {console.log('NENHUM DOADOR ENCONTRADO NO PERIODO')}
-    } 
+        if (dataFiltro === dataDoador) {
+            console.log(`${doador.nome.padEnd(50)}| ${doador.idade.toString().padEnd(10)}| ${doador.peso.padEnd(10)}|  ${doador.sangue.padEnd(15)}|    ${doador.ultimaDoacao}`);
+        }
+    }  
 
     console.log('-----------------------------------------------');
     ask.question('\nAperte Enter para voltar... ');
@@ -166,4 +176,3 @@ function menuApp(){
         
 menuApp()
         
-
