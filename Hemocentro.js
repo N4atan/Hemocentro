@@ -127,7 +127,7 @@ function filterByDate(doadores) {
             dataDoador = Number(doador.ultimaDoacao.split('/').reverse().join(''));
         }
 
-        if (dataFiltro === dataDoador) {
+        if (dataFiltro >= dataDoador) {
             console.log(`${doador.nome.padEnd(50)}| ${doador.idade.toString().padEnd(10)}| ${doador.peso.padEnd(10)}|  ${doador.sangue.padEnd(15)}|    ${doador.ultimaDoacao}`);
         }
     }  
